@@ -25,9 +25,8 @@ export async function renderToPptx(
   theme: Theme,
   options: RenderOptions
 ): Promise<RenderResult> {
-  const pptx = new PptxGenJS({
-    slideLayout: options.ratio === '16:9' ? 'LAYOUT_WIDE' : 'LAYOUT_4x3',
-  });
+  const pptx = new PptxGenJS();
+  pptx.layout = options.ratio === '16:9' ? 'LAYOUT_WIDE' : 'LAYOUT_4x3';
 
   if (options.title) pptx.title = options.title;
   if (options.author) pptx.author = options.author;
