@@ -1,0 +1,32 @@
+{
+  "name": "blue-white",
+  "version": "1.0.0",
+  "description": "Clean corporate theme with blue accent",
+  "author": "SlideSmith",
+  "colors": {
+    "background": "#FFFFFF",
+    "surface": "#F8F9FA",
+    "text": "#202124",
+    "textMuted": "#5F6368",
+    "accent": "#1A73E8",
+    "accent2": "#34A853",
+    "border": "#DADCE0",
+    "error": "#D93025"
+  },
+  "fonts": {
+    "heading": { "family": "Inter", "weight": 600, "weights": { "h1": 700, "h2": 600, "h3": 600, "h4": 600 } },
+    "body": { "family": "Inter", "weight": 400, "size": 14 },
+    "mono": { "family": "JetBrains Mono", "weight": 400 }
+  },
+  "spacing": {
+    "compact": { "slidePadding": 24, "blockGap": 8, "paragraphGap": 4, "sectionGap": 12 },
+    "comfortable": { "slidePadding": 36, "blockGap": 14, "paragraphGap": 8, "sectionGap": 20 },
+    "breathing": { "slidePadding": 48, "blockGap": 20, "paragraphGap": 12, "sectionGap": 28 }
+  },
+  "radii": { "small": 2, "medium": 4, "large": 8, "full": 999 },
+  "shadows": {
+    "subtle": { "offsetX": 0, "offsetY": 1, "blur": 2, "color": "#0000001A" },
+    "medium": { "offsetX": 0, "offsetY": 2, "blur": 8, "color": "#00000026" }
+  },
+  "layouts": ["cover", "hero-top", "three-column", "symmetric", "waterfall", "comparison", "quote", "section-divider"]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "high-contrast",
+  "version": "1.0.0",
+  "description": "High contrast theme for accessibility and projectors",
+  "author": "SlideSmith",
+  "colors": {
+    "background": "#000000",
+    "surface": "#1A1A1A",
+    "text": "#FFFFFF",
+    "textMuted": "#CCCCCC",
+    "accent": "#FFD700",
+    "accent2": "#00FF00",
+    "border": "#FFFFFF",
+    "error": "#FF4444"
+  },
+  "fonts": {
+    "heading": { "family": "Inter", "weight": 700, "weights": { "h1": 800, "h2": 700, "h3": 700, "h4": 700 } },
+    "body": { "family": "Inter", "weight": 500, "size": 16 },
+    "mono": { "family": "JetBrains Mono", "weight": 500 }
+  },
+  "spacing": {
+    "compact": { "slidePadding": 28, "blockGap": 10, "paragraphGap": 6, "sectionGap": 14 },
+    "comfortable": { "slidePadding": 40, "blockGap": 16, "paragraphGap": 10, "sectionGap": 22 },
+    "breathing": { "slidePadding": 52, "blockGap": 24, "paragraphGap": 14, "sectionGap": 30 }
+  },
+  "radii": { "small": 4, "medium": 8, "large": 12, "full": 999 },
+  "shadows": {
+    "subtle": { "offsetX": 0, "offsetY": 1, "blur": 2, "color": "#FFFFFF33" },
+    "medium": { "offsetX": 0, "offsetY": 2, "blur": 8, "color": "#FFFFFF44" }
+  },
+  "layouts": ["cover", "hero-top", "three-column", "symmetric", "waterfall", "comparison", "quote", "section-divider"]
+}

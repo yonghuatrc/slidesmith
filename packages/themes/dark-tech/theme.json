@@ -1,0 +1,32 @@
+{
+  "name": "dark-tech",
+  "version": "1.0.0",
+  "description": "Dark theme for tech presentations with blue accent",
+  "author": "SlideSmith",
+  "colors": {
+    "background": "#0D1117",
+    "surface": "#161B22",
+    "text": "#E6EDF3",
+    "textMuted": "#8B949E",
+    "accent": "#58A6FF",
+    "accent2": "#3FB950",
+    "border": "#30363D",
+    "error": "#F85149"
+  },
+  "fonts": {
+    "heading": { "family": "Inter", "weight": 600, "weights": { "h1": 800, "h2": 700, "h3": 600, "h4": 600 } },
+    "body": { "family": "Inter", "weight": 400, "size": 14 },
+    "mono": { "family": "JetBrains Mono", "weight": 400 }
+  },
+  "spacing": {
+    "compact": { "slidePadding": 24, "blockGap": 8, "paragraphGap": 4, "sectionGap": 12 },
+    "comfortable": { "slidePadding": 36, "blockGap": 14, "paragraphGap": 8, "sectionGap": 20 },
+    "breathing": { "slidePadding": 48, "blockGap": 20, "paragraphGap": 12, "sectionGap": 28 }
+  },
+  "radii": { "small": 2, "medium": 4, "large": 8, "full": 999 },
+  "shadows": {
+    "subtle": { "offsetX": 0, "offsetY": 1, "blur": 2, "color": "#00000033" },
+    "medium": { "offsetX": 0, "offsetY": 2, "blur": 8, "color": "#00000044" }
+  },
+  "layouts": ["cover", "hero-top", "three-column", "symmetric", "waterfall", "comparison", "quote", "section-divider"]
+}
