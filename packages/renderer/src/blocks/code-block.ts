@@ -49,7 +49,7 @@ export async function renderCodeBlock(
   const codeLines = block.code.split('\n').slice(0, maxLines);
 
   // Background box
-  slide.addShape(slide.ShapeType ? 'rect' : undefined, {
+  slide.addShape('rect', {
     x: x - 0.05,
     y: y - 0.05,
     w: w + 0.1,
@@ -65,18 +65,18 @@ export async function renderCodeBlock(
 
   if (hl) {
     const lang = SUPPORTED_LANGUAGES.includes(block.language) ? block.language : 'text';
-    const tokens = hl.codeToTokens(block.code, {
+    const result = hl.codeToTokens(block.code, {
       lang,
       theme: 'github-dark',
     });
 
-    for (const line of tokens) {
-      if (!line.content || line.content.length === 0) {
+    for (const line of result.tokens) {
+      if (!line || line.length === 0) {
         lineY += lineHeight / 72;
         continue;
       }
 
-      const runs = line.content.map((token: any) => ({
+      const runs = line.map((token: any) => ({
         text: token.content,
         options: {
           fontSize,

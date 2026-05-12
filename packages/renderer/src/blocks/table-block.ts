@@ -54,17 +54,14 @@ export function renderTableBlock(
   // Column widths
   const colW = block.headers.map(() => w / block.headers.length);
 
-  slide.addTable(
-    allRows.map((row) => ({ options: {}, rows: row })),
-    {
-      x,
-      y,
-      w,
-      h,
-      colW,
-      margin: [0, 0, 0, 0],
-      border: { type: 'solid', pt: 0.5, color: theme.colors.border },
-      autoPage: false,
-    }
-  );
+  slide.addTable(allRows, {
+    x,
+    y,
+    w,
+    h,
+    colW,
+    margin: [0, 0, 0, 0],
+    border: { type: 'solid', pt: 0.5, color: theme.colors.border },
+    autoPage: false,
+  });
 }

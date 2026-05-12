@@ -31,7 +31,7 @@ export async function buildSlides(
     const bgColor = slide.background?.type === 'color'
       ? slide.background.value
       : theme.colors.background;
-    pptxSlide.background = { fill: bgColor };
+    pptxSlide.background = { color: bgColor };
 
     // Get layout definition
     const layout = getLayout(slide.layout);
@@ -90,9 +90,7 @@ export async function buildSlides(
 
     // Render speaker notes if present
     if (slide.speakerNotes) {
-      // pptxgenjs doesn't have a direct notes API,
-      // but we can set it on the slide object
-      (pptxSlide as any).notes = slide.speakerNotes;
+      pptxSlide.addNotes(slide.speakerNotes);
     }
   }
 }

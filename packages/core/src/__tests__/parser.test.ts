@@ -87,7 +87,8 @@ describe('parseMarkdown', () => {
       const md = `1. First\n2. Second`;
       const result = parseMarkdown(md);
       const items = result.slides[0].blocks.filter(
-        (b) => b.type === 'text' && b.style === 'list-item'
+        (b): b is import('@slidesmith/content-model').TextBlock =>
+          b.type === 'text' && b.style === 'list-item'
       );
       expect(items).toHaveLength(2);
       expect(items[0].listType).toBe('ordered');

@@ -50,7 +50,7 @@ export function renderTwoColumnBlock(
 
   // Vertical divider
   const dividerX = x + colWidth + 0.1;
-  slide.addShape(slide.ShapeType ? slide.ShapeType.rect : undefined, {
+  slide.addShape('rect', {
     x: dividerX,
     y,
     w: 0.01,
