@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import PptxGenJS from 'pptxgenjs';
-import { createRenderer } from '../index';
+import { dryRun } from '../index';
+import type { Slide } from '@slidesmith/content-model';
 
 describe('renderer scaffold', () => {
   it('imports pptxgenjs without error', () => {
@@ -16,7 +17,18 @@ describe('renderer scaffold', () => {
     expect(buffer.length).toBeGreaterThan(0);
   });
 
-  it('createRenderer returns marker string', () => {
-    expect(createRenderer()).toBe('renderer-ready');
+  it('dryRun returns slide statistics', () => {
+    const slides: Slide[] = [
+      { layout: 'cover', blocks: [{ type: 'text', style: 'heading', content: 'Title', level: 1 }] },
+      { layout: 'hero-top', blocks: [{ type: 'text', style: 'body', content: 'Body' }] },
+    ];
+    const result = dryRun(slides);
+    expect(result.slideCount).toBe(2);
+    expect(result.layouts).toEqual(['cover', 'hero-top']);
+    expect(result.blockCounts).toEqual([1, 1]);
+  });
+
+  it('dryRun handles empty slides', () => {
+    expect(dryRun([]).slideCount).toBe(0);
   });
 });
