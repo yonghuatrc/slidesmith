@@ -10,7 +10,11 @@
     "build": "tsc"
   },
   "dependencies": {
-    "pptxgenjs": "^3.12"
+    "@slidesmith/content-model": "workspace:*",
+    "@slidesmith/themes": "workspace:*",
+    "canvas": "^3.2.3",
+    "pptxgenjs": "^3.12",
+    "shiki": "^4.0.2"
   },
   "devDependencies": {
     "@types/node": "^22"

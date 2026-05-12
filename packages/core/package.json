@@ -11,10 +11,20 @@
     "build": "tsc"
   },
   "dependencies": {
-    "zod": "^3.23",
-    "js-yaml": "^4.1"
+    "@slidesmith/content-model": "workspace:*",
+    "@slidesmith/themes": "workspace:*",
+    "commander": "^14.0.3",
+    "js-yaml": "^4.1",
+    "mdast-util-from-markdown": "^2.0.3",
+    "remark": "^15.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "unified": "^11.0.5",
+    "zod": "^3.23"
   },
   "devDependencies": {
-    "@types/js-yaml": "^4.0"
+    "@types/js-yaml": "^4.0",
+    "@types/mdast": "^4.0.4",
+    "@types/node": "^22.19.18"
   }
 }
