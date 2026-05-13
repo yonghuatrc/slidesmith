@@ -6,6 +6,7 @@ import { executeBuild } from './build.command';
 import { executeListThemes } from './list-themes.command';
 import { executePreview } from './preview.command';
 import { executeInit } from './init.command';
+import { executeGenerate } from './generate.command';
 
 const program = new Command();
 
@@ -71,6 +72,26 @@ program
   .argument('[directory]', 'Project directory (defaults to current directory)')
   .action((dir?: string) => {
     executeInit({ dir });
+  });
+
+program
+  .command('generate')
+  .description('Generate slides from a text prompt using AI')
+  .argument('<prompt>', 'Text prompt describing the presentation')
+  .option('-p, --provider <name>', 'AI provider (openai, ollama)')
+  .option('-m, --model <name>', 'Model name')
+  .option('-t, --theme <name>', 'Theme name')
+  .option('-o, --output <path>', 'Output path')
+  .option('--dry-run', 'Show outline without calling AI')
+  .option('--verbose', 'Debug output')
+  .option('--slide-count <number>', 'Number of slides')
+  .action(async (prompt: string, opts: Record<string, unknown>) => {
+    try {
+      await executeGenerate(prompt, opts);
+    } catch (err) {
+      console.error(`❌ ${(err as Error).message}`);
+      process.exit(1);
+    }
   });
 
 program.parse(process.argv);
