@@ -4,6 +4,7 @@ import { Command } from 'commander';
 import { loadConfig } from '../config';
 import { executeBuild } from './build.command';
 import { executeListThemes } from './list-themes.command';
+import { executePreview } from './preview.command';
 
 const program = new Command();
 
@@ -52,6 +53,15 @@ program
   .description('List available themes')
   .action(() => {
     executeListThemes();
+  });
+
+program
+  .command('preview')
+  .description('Start a preview server for a markdown file')
+  .argument('<file>', 'Path to markdown file')
+  .option('-p, --port <number>', 'Port number', '3000')
+  .action(async (file: string, opts: Record<string, unknown>) => {
+    await executePreview(file, { port: parseInt(opts.port as string, 10) });
   });
 
 program.parse(process.argv);
