@@ -18,7 +18,7 @@ export function renderImageBlock(
   density: 'compact' | 'comfortable' | 'breathing',
   slideWidth: number,
   slideHeight: number,
-  fontScale: number = 1.0
+  _fontScale: number = 1.0
 ): void {
   const { x, y, w, h } = zoneToInches(zone, slideWidth, slideHeight);
 

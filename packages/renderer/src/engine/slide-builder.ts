@@ -200,7 +200,7 @@ async function renderZoneBlocks(
   fontScale: number = 1.0
 ): Promise<OverflowState | undefined> {
   const spacing = theme.spacing[density];
-  const { x, y, w, h } = zoneToInches(zone, slideWidth, slideHeight);
+  const { y, h } = zoneToInches(zone, slideWidth, slideHeight);
   const blockCount = blocks.length;
 
   if (blockCount === 0) return;
