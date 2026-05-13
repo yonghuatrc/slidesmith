@@ -3,6 +3,7 @@
 import { Command } from 'commander';
 import { loadConfig } from '../config';
 import { executeBuild } from './build.command';
+import { executeListThemes } from './list-themes.command';
 
 const program = new Command();
 
@@ -44,6 +45,13 @@ program
       console.error(`❌ ${(err as Error).message}`);
       process.exit(1);
     }
+  });
+
+program
+  .command('list-themes')
+  .description('List available themes')
+  .action(() => {
+    executeListThemes();
   });
 
 program.parse(process.argv);
