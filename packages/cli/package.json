@@ -1,0 +1,43 @@
+{
+  "name": "@slidesmith/cli",
+  "version": "0.1.0",
+  "description": "Design-first, open source PPTX generator with AI smarts",
+  "type": "module",
+  "bin": {
+    "slidesmith": "dist/cli.cjs"
+  },
+  "files": [
+    "dist/"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepublishOnly": "cp ../core/dist/cli.cjs dist/cli.cjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yonghuatrc/slidesmith.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yonghuatrc/slidesmith/issues"
+  },
+  "homepage": "https://github.com/yonghuatrc/slidesmith#readme",
+  "keywords": [
+    "presentation",
+    "pptx",
+    "markdown",
+    "slides",
+    "cli"
+  ],
+  "dependencies": {
+    "pptxgenjs": "^3.12",
+    "shiki": "^3.2",
+    "openai": "^4.86",
+    "zod": "^3.23"
+  }
+}

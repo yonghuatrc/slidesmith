@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "vitest run",
-    "build": "tsc && ../../node_modules/esbuild/bin/esbuild src/cli/index.ts --bundle --platform=node --outfile=dist/cli.cjs --external:pptxgenjs --external:shiki --external:openai --external:@slidesmith/ai"
+    "build": "tsc && ../../node_modules/esbuild/bin/esbuild src/cli/index.ts --bundle --platform=node --outfile=dist/cli.cjs --external:pptxgenjs --external:shiki --external:openai"
   },
   "dependencies": {
     "@slidesmith/ai": "workspace:*",
