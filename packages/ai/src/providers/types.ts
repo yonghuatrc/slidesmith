@@ -1,4 +1,4 @@
-import type { ContentModel } from '@slidesmith/content-model';
+import type { Slide } from '@slidesmith/content-model';
 
 export interface GenerateOptions {
   slideCount?: number;

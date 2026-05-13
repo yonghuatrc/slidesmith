@@ -25,14 +25,14 @@ program
   .action(async (file: string, opts: Record<string, unknown>) => {
     try {
       await executeBuild(file, {
-        theme: opts.theme,
-        output: opts.output,
+        theme: opts.theme as string,
+        output: opts.output as string,
         ratio: opts.ratio as '16:9' | '4:3',
         density: opts.density as 'compact' | 'comfortable' | 'breathing',
-        dryRun: opts.dryRun,
-        verbose: opts.verbose,
-        title: opts.title,
-        author: opts.author,
+        dryRun: opts.dryRun as boolean | undefined,
+        verbose: opts.verbose as boolean | undefined,
+        title: opts.title as string | undefined,
+        author: opts.author as string | undefined,
       });
     } catch (err) {
       console.error(`❌ ${(err as Error).message}`);
