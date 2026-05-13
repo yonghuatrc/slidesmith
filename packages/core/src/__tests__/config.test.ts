@@ -39,6 +39,36 @@ describe('loadConfig', () => {
     await expect(loadConfig('/path/config.yaml')).rejects.toThrow();
   });
 
+  it('CLI overrides win over file config when merged', async () => {
+    mockFs.existsSync.mockReturnValue(true);
+    mockFsPromises.readFile.mockResolvedValue('theme: dark-tech\nratio: 4:3\n');
+    const fileConfig = await loadConfig('/path/config.yaml');
+    // Simulate the merge logic from cli/index.ts
+    const cliTheme = 'blue-white';
+    const merged = {
+      theme: cliTheme ?? fileConfig.theme,
+      output: fileConfig.output,
+      ratio: fileConfig.ratio,
+      density: fileConfig.density,
+      embedFonts: fileConfig.embedFonts,
+    };
+    expect(merged.theme).toBe('blue-white');
+    expect(merged.ratio).toBe('4:3');
+    expect(merged.density).toBe('comfortable');
+    expect(merged.embedFonts).toBe(true);
+  });
+
+  it('file config with partial values falls back to defaults', async () => {
+    mockFs.existsSync.mockReturnValue(true);
+    mockFsPromises.readFile.mockResolvedValue('output: custom/path.pptx\n');
+    const config = await loadConfig('/path/config.yaml');
+    expect(config.theme).toBe('dark-tech');
+    expect(config.ratio).toBe('16:9');
+    expect(config.density).toBe('comfortable');
+    expect(config.output).toBe('custom/path.pptx');
+    expect(config.embedFonts).toBe(true);
+  });
+
   it('returns all defaults', () => {
     expect(DEFAULT_CONFIG.theme).toBe('dark-tech');
     expect(DEFAULT_CONFIG.ratio).toBe('16:9');

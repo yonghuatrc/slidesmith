@@ -5,10 +5,11 @@ import { parseMarkdown } from '../parser/markdown';
 import { renderToPptx, dryRun } from '@slidesmith/renderer';
 
 export interface BuildOptions {
-  theme: string;
-  output: string;
-  ratio: '16:9' | '4:3';
-  density: 'compact' | 'comfortable' | 'breathing';
+  theme?: string;
+  output?: string;
+  ratio?: '16:9' | '4:3';
+  density?: 'compact' | 'comfortable' | 'breathing';
+  embedFonts?: boolean;
   dryRun?: boolean;
   verbose?: boolean;
   title?: string;
@@ -57,7 +58,7 @@ export async function executeBuild(
   }
 
   // Load theme
-  const theme = loadTheme(options.theme);
+  const theme = loadTheme(options.theme!);
   if (options.verbose) {
     console.log(`🎨 Theme: ${theme.name}`);
   }
@@ -79,14 +80,14 @@ export async function executeBuild(
   }
 
   const result = await renderToPptx(parsed.slides, theme, {
-    ratio: options.ratio,
-    density: options.density,
+    ratio: options.ratio!,
+    density: options.density!,
     title: options.title || 'SlideSmith Presentation',
     author: options.author || 'SlideSmith',
   });
 
   // Write output
-  const outPath = resolve(process.cwd(), options.output);
+  const outPath = resolve(process.cwd(), options.output!);
   const outDir = dirname(outPath);
   if (!existsSync(outDir)) {
     mkdirSync(outDir, { recursive: true });

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
+import { loadConfig } from '../config';
 import { executeBuild } from './build.command';
 
 const program = new Command();
@@ -14,26 +15,31 @@ program
   .command('build')
   .description('Build a PPTX presentation from a markdown file')
   .argument('<file>', 'Path to markdown file')
-  .option('-t, --theme <name>', 'Theme name', 'dark-tech')
-  .option('-o, --output <path>', 'Output path', 'output/deck.pptx')
-  .option('--ratio <16:9|4:3>', 'Aspect ratio', '16:9')
-  .option('--density <mode>', 'Content density (compact|comfortable|breathing)', 'comfortable')
-  .option('--dry-run', 'Show outline without rendering', false)
-  .option('--verbose', 'Debug output', false)
+  .option('-t, --theme <name>', 'Theme name')
+  .option('-o, --output <path>', 'Output path')
+  .option('--ratio <16:9|4:3>', 'Aspect ratio')
+  .option('--density <mode>', 'Content density (compact|comfortable|breathing)')
+  .option('--config <path>', 'Path to config file')
+  .option('--dry-run', 'Show outline without rendering')
+  .option('--verbose', 'Debug output')
   .option('--title <text>', 'Presentation title')
   .option('--author <text>', 'Author name')
   .action(async (file: string, opts: Record<string, unknown>) => {
     try {
-      await executeBuild(file, {
-        theme: opts.theme as string,
-        output: opts.output as string,
-        ratio: opts.ratio as '16:9' | '4:3',
-        density: opts.density as 'compact' | 'comfortable' | 'breathing',
-        dryRun: opts.dryRun as boolean | undefined,
-        verbose: opts.verbose as boolean | undefined,
+      const fileConfig = await loadConfig(opts.config as string | undefined);
+      const mergedOpts = {
+        theme: opts.theme as string ?? fileConfig.theme,
+        output: opts.output as string ?? fileConfig.output,
+        ratio: (opts.ratio as string ?? fileConfig.ratio) as '16:9' | '4:3',
+        density: (opts.density as string ?? fileConfig.density) as 'compact' | 'comfortable' | 'breathing',
+        embedFonts: (opts.embedFonts as boolean | undefined) ?? fileConfig.embedFonts,
+        dryRun: opts.dryRun as boolean | undefined ?? false,
+        verbose: opts.verbose as boolean | undefined ?? false,
         title: opts.title as string | undefined,
         author: opts.author as string | undefined,
-      });
+      };
+
+      await executeBuild(file, mergedOpts);
     } catch (err) {
       console.error(`❌ ${(err as Error).message}`);
       process.exit(1);
