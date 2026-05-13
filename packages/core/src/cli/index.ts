@@ -5,6 +5,7 @@ import { loadConfig } from '../config';
 import { executeBuild } from './build.command';
 import { executeListThemes } from './list-themes.command';
 import { executePreview } from './preview.command';
+import { executeInit } from './init.command';
 
 const program = new Command();
 
@@ -62,6 +63,14 @@ program
   .option('-p, --port <number>', 'Port number', '3000')
   .action(async (file: string, opts: Record<string, unknown>) => {
     await executePreview(file, { port: parseInt(opts.port as string, 10) });
+  });
+
+program
+  .command('init')
+  .description('Initialize a new SlideSmith project')
+  .argument('[directory]', 'Project directory (defaults to current directory)')
+  .action((dir?: string) => {
+    executeInit({ dir });
   });
 
 program.parse(process.argv);
