@@ -26,6 +26,8 @@ jobs:
 
       - run: pnpm lint
 
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq unzip
+
       - run: pnpm test
 
       - run: pnpm build

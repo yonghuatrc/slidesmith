@@ -1,6 +1,6 @@
 import { createServer, type Server } from 'node:http';
 import { readFileSync, watch, existsSync } from 'node:fs';
-import { resolve, extname } from 'node:path';
+import { resolve } from 'node:path';
 import { loadTheme } from '@slidesmith/themes';
 import { parseMarkdown } from '../parser/markdown';
 import { renderToPptx } from '@slidesmith/renderer';
@@ -39,7 +39,7 @@ export function startPreviewServer(options: PreviewOptions): Server {
       const md = readFileSync(mdPath, 'utf-8');
       const parsed = parseMarkdown(md);
 
-      const result = await renderToPptx(parsed.slides, theme, {
+      await renderToPptx(parsed.slides, theme, {
         ratio,
         density,
         title: 'Preview',

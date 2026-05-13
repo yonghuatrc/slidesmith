@@ -14,7 +14,6 @@ import type {
   ThematicBreak,
   TableRow,
   TableCell,
-  PhrasingContent,
 } from 'mdast';
 import type { Slide, Block, TextBlock, CodeBlock, ImageBlock, QuoteBlock, LayoutType } from '@slidesmith/content-model';
 import { extractNoteLine } from './speaker-notes';
@@ -198,7 +197,7 @@ function blockquoteToBlocks(node: Blockquote): QuoteBlock[] {
 
     if (child.type === 'paragraph') {
       if (content.startsWith('—') || content.startsWith('-')) {
-        attribution = content.replace(/^[—\-]\s*/, '');
+        attribution = content.replace(/^[—-]\s*/, '');
       } else {
         text += (text ? '\n' : '') + content;
       }

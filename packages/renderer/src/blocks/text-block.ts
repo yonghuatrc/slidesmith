@@ -1,7 +1,6 @@
 import type { TextBlock } from '@slidesmith/content-model';
 import type { Theme } from '@slidesmith/themes';
 import type { Zone } from '../layouts/types';
-import type { ZoneCoord } from './types';
 import { zoneToInches } from '../utils/pptx';
 
 /**

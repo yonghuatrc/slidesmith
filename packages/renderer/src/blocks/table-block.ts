@@ -2,7 +2,7 @@ import type { TableBlock } from '@slidesmith/content-model';
 import type { Theme } from '@slidesmith/themes';
 import type { Zone } from '../layouts/types';
 import { zoneToInches } from '../utils/pptx';
-import { lightenColor, darkenColor } from '../utils/color';
+import { lightenColor } from '../utils/color';
 
 /**
  * Render a TableBlock onto a pptxgenjs slide.

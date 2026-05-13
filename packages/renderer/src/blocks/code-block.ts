@@ -2,7 +2,6 @@ import type { CodeBlock } from '@slidesmith/content-model';
 import type { Theme } from '@slidesmith/themes';
 import type { Zone } from '../layouts/types';
 import { zoneToInches } from '../utils/pptx';
-import { lightenColor } from '../utils/color';
 
 /** Languages to bundle for shiki highlighting. */
 const SUPPORTED_LANGUAGES = [

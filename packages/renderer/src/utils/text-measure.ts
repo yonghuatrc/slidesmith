@@ -5,10 +5,9 @@
  * for environments where canvas native bindings are unavailable (e.g., WSL).
  */
 
-const CHARS_PER_INCH = 12; // rough estimate for 12pt font at default width
 const LINE_HEIGHT_MULTIPLIER = 1.4;
 
-let canvasModule: any = null;
+let canvasModule: ReturnType<typeof require> | null = null;
 
 try {
   canvasModule = require('canvas');

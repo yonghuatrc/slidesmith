@@ -21,10 +21,9 @@ export function renderImageBlock(
   const { x, y, w, h } = zoneToInches(zone, slideWidth, slideHeight);
 
   try {
-    let imageData: string | Buffer | undefined;
+    const isRemoteUrl = block.src.startsWith('http://') || block.src.startsWith('https://');
 
-    if (block.src.startsWith('http://') || block.src.startsWith('https://')) {
-      // Remote URL — not auto-downloading for v0.1, use alt text instead
+    if (isRemoteUrl) {
       slide.addText(`[Image: ${block.alt}]`, {
         x,
         y,
@@ -42,7 +41,7 @@ export function renderImageBlock(
 
     // Local file
     const imgPath = isAbsolute(block.src) ? block.src : resolve(process.cwd(), block.src);
-    imageData = readFileSync(imgPath);
+    const imageData = readFileSync(imgPath);
 
     // Determine image type
     const ext = block.src.split('.').pop()?.toLowerCase();

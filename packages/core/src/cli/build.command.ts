@@ -37,6 +37,9 @@ export async function executeBuild(
 
   // Parse markdown
   const parsed = parseMarkdown(md);
+  if (parsed.slides.length === 0) {
+    throw new Error('ERR_PARSER_EMPTY_INPUT: No slides found in markdown file. Use `---` or `##` to separate slides.');
+  }
   if (options.verbose) {
     console.log(`📊 Slides: ${parsed.slides.length}`);
   }

@@ -22,7 +22,7 @@ program
   .option('--verbose', 'Debug output', false)
   .option('--title <text>', 'Presentation title')
   .option('--author <text>', 'Author name')
-  .action(async (file: string, opts: Record<string, any>) => {
+  .action(async (file: string, opts: Record<string, unknown>) => {
     try {
       await executeBuild(file, {
         theme: opts.theme,

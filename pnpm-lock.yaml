@@ -30,6 +30,15 @@ importers:
         specifier: ^3.1
         version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.18)
 
+  packages/ai:
+    dependencies:
+      '@slidesmith/content-model':
+        specifier: workspace:*
+        version: link:../content-model
+      zod:
+        specifier: ^3.23
+        version: 3.25.76
+
   packages/content-model:
     dependencies:
       zod:
@@ -41,6 +50,9 @@ importers:
       '@slidesmith/content-model':
         specifier: workspace:*
         version: link:../content-model
+      '@slidesmith/renderer':
+        specifier: workspace:*
+        version: link:../renderer
       '@slidesmith/themes':
         specifier: workspace:*
         version: link:../themes
