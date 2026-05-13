@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@slidesmith/content-model": "workspace:*",
+    "json5": "^2.2",
+    "openai": "^4.86",
     "zod": "^3.23"
   }
 }
