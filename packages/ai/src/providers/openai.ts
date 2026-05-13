@@ -2,7 +2,6 @@ import type { Slide } from '@slidesmith/content-model';
 import type { AiProvider, GenerateOptions } from './types';
 import { validate } from '@slidesmith/content-model';
 import { getSystemPrompt } from '../prompt/system-prompt';
-import { CONTENT_MODEL_JSON_SCHEMA } from '../schema/content-model-schema';
 
 export class OpenAIProvider implements AiProvider {
   readonly name = 'openai';

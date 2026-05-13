@@ -1,8 +1,8 @@
-import { readFileSync, existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import type { Slide } from '@slidesmith/content-model';
 import { validate } from '@slidesmith/content-model';
-import { loadTheme, listThemes } from '@slidesmith/themes';
+import { loadTheme } from '@slidesmith/themes';
 import { renderToPptx } from '@slidesmith/renderer';
 import { loadConfig } from '../config';
 

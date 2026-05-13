@@ -91,7 +91,7 @@ async function renderSlideWithOverflow(
 
     // Track overflow state across all zones
     let slideOverflowed = false;
-    let fontScale = 1.0;
+    const fontScale = 1.0;
 
     // Render each zone
     for (const assignment of assignments) {
@@ -123,10 +123,9 @@ async function renderSlideWithOverflow(
 
         case 'media':
           for (const block of assignment.blocks) {
-            const { x, y, w, h } = zoneToInches(assignment.zone, slideWidth, slideHeight);
+            const { y, w, h } = zoneToInches(assignment.zone, slideWidth, slideHeight);
             const renderedH = estimateBlockHeight(block, theme, density, w, h, fontScale);
-            const blockY = y; // Single block, no stacking
-            if (density === 'comfortable' && blockY + renderedH > y + h) {
+            if (density === 'comfortable' && y + renderedH > y + h) {
               console.warn(`[overflow] Content truncated in ${assignment.zone.name} (${slide.layout})`);
               zoneOverflow = { overflowed: true, overflowBlocks: [block], warnings: [] };
               break;
@@ -281,7 +280,7 @@ function estimateBlockHeight(
   const lineHeight = baseFontSize / 72; // Convert pt to inches
 
   switch (block.type) {
-    case 'text':
+    case 'text': {
       if (block.style === 'heading') {
         const headingSize = (block.level === 1 ? 36 : block.level === 2 ? 28 : 22) * fontScale;
         return headingSize / 72 + 0.1;
@@ -290,6 +289,7 @@ function estimateBlockHeight(
       const charsPerLine = Math.floor((zoneWidth * 72) / (baseFontSize * 0.6));
       const lines = Math.ceil(block.content.length / Math.max(charsPerLine, 1));
       return Math.min(lines * lineHeight + 0.1, zoneHeight);
+    }
 
     case 'table': {
       const rowCount = block.rows.length + 1; // +1 for header
