@@ -28,6 +28,18 @@ export async function executeBuild(
     throw new Error(`ERR_FILE_NOT_FOUND: Input file not found: ${mdPath}`);
   }
 
+  // Validate ratio
+  const VALID_RATIOS = ['16:9', '4:3'] as const;
+  if (!VALID_RATIOS.includes(options.ratio as never)) {
+    throw new Error(`ERR_CONFIG_INVALID: Invalid ratio "${options.ratio}". Must be "16:9" or "4:3".`);
+  }
+
+  // Validate density
+  const VALID_DENSITIES = ['compact', 'comfortable', 'breathing'] as const;
+  if (!VALID_DENSITIES.includes(options.density as never)) {
+    throw new Error(`ERR_CONFIG_INVALID: Invalid density "${options.density}". Must be one of: compact, comfortable, breathing.`);
+  }
+
   // Read markdown
   const md = readFileSync(mdPath, 'utf-8');
   if (options.verbose) {
