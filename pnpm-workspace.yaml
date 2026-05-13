@@ -2,4 +2,4 @@ packages:
   - 'packages/*'
 allowBuilds:
   canvas: true
-  esbuild: set this to true or false
+  esbuild: true

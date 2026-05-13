@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "bin": {
-    "slidesmith": "./src/cli/index.ts"
+    "slidesmith": "./dist/cli.cjs"
   },
   "exports": {
     "./config": "./src/config/index.ts",
@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "vitest run",
-    "build": "tsc"
+    "build": "tsc && ../../node_modules/esbuild/bin/esbuild src/cli/index.ts --bundle --platform=node --outfile=dist/cli.cjs --external:pptxgenjs --external:shiki"
   },
   "dependencies": {
     "@slidesmith/content-model": "workspace:*",
@@ -23,9 +23,11 @@
     "commander": "^14.0.3",
     "js-yaml": "^4.1",
     "mdast-util-from-markdown": "^2.0.3",
+    "pptxgenjs": "^3.12.0",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
+    "shiki": "^4.0.2",
     "unified": "^11.0.5",
     "zod": "^3.23"
   },
