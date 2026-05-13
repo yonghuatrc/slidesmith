@@ -1,6 +1,6 @@
 # SlideSmith Test Plan
 
-> **Status**: Pre-implementation · **Last updated**: 2026-05-12 · **Version**: v0.1 (planned)
+> **Status**: Post-implementation · **Last updated**: 2026-05-14 · **Version**: v0.1.0
 
 ---
 
@@ -67,12 +67,12 @@
 ## 2. CLI Integration Tests
 
 ### `slidesmith build`
-- [ ] `slidesmith build tests/fixtures/basic-deck.md` → exits 0, writes `.pptx`
-- [ ] `slidesmith build nonexistent.md` → ERR_IO_FILE_NOT_FOUND, exits 1
-- [ ] `-o` / `--output` flag overrides output path
-- [ ] `--theme dark-tech` applies dark-tech theme (verify via XML snapshot)
+- [x] `slidesmith build tests/fixtures/basic-deck.md` → exits 0, writes `.pptx`
+- [x] `slidesmith build nonexistent.md` → ERR_IO_FILE_NOT_FOUND, exits 1
+- [x] `-o` / `--output` flag overrides output path
+- [x] `--theme dark-tech` applies dark-tech theme (verify via XML snapshot)
 - [ ] `--ratio 4:3` produces 4:3 slide dimensions in PPTX
-- [ ] `--density compact` applies compact spacing
+- [x] `--density compact` applies compact spacing
 - [ ] `--dry-run` prints slide summary, no file written
 - [ ] `--verbose` includes debug output to stderr
 - [ ] `--config slidesmith.custom.yaml` loads custom config
@@ -86,32 +86,42 @@
 - [ ] Concurrent builds to same output → handled gracefully
 
 ### `slidesmith generate`
-- [ ] `slidesmith generate "3 slides" --provider openai` → exits 0, writes `.pptx`
+- [x] `slidesmith generate "3 slides" --provider openai` → exits 0, writes `.pptx`
 - [ ] `slidesmith generate "3 slides" --provider ollama` → exits 0 (with Ollama running)
-- [ ] `--dry-run` shows estimated slides + tokens, no API call made
-- [ ] `--provider invalid` → clear error listing valid providers
-- [ ] OpenAI API key missing → ERR_CONFIG_MISSING_KEY
+- [x] `--dry-run` shows estimated slides + tokens, no API call made
+- [x] `--provider invalid` → clear error listing valid providers
+- [x] OpenAI API key missing → ERR_CONFIG_MISSING_KEY
 - [ ] Ollama not running → ERR_AI_PROVIDER_FAIL with readable message
-- [ ] `--model` flag overrides default model per provider
-- [ ] Progress output written to stderr during generation
+- [x] `--model` flag overrides default model per provider
+- [x] Progress output written to stderr during generation
 - [ ] Abort via Ctrl+C → clean exit
 
 ### `slidesmith init`
-- [ ] `slidesmith init my-deck` → creates my-deck/ with config + example .md
+- [x] `slidesmith init my-deck` → creates my-deck/ with config + example .md
 - [ ] `slidesmith init` without name → creates in current directory
 - [ ] Target directory exists → prompt or `--force` to overwrite
-- [ ] Generated `slidesmith.config.yaml` loads without error
+- [x] Generated `slidesmith.yaml` loads without error
 
 ### `slidesmith preview`
-- [ ] `slidesmith preview deck.md` → starts HTTP server (default port)
-- [ ] `--port` flag overrides default port
+- [x] `slidesmith preview deck.md` → starts HTTP server (default port)
+- [x] `--port` flag overrides default port
 - [ ] Hot-reload triggers on .md file save
-- [ ] No source file argument → clear error
-- [ ] Server responds with HTML page containing slide previews
+- [x] No source file argument → clear error
+- [x] Server responds with HTML page containing slide previews
 
 ### `slidesmith list-themes`
-- [ ] Lists all 5 themes with name + description
-- [ ] Output formatted as table for readability
+- [x] Lists all 5 themes with name + description
+- [x] Output formatted as table for readability
+
+### Overflow & Density Flag Interactions
+- [ ] `--density compact` with long content → font auto-shrinks (compact overflow)
+- [ ] `--density comfortable` with long content → truncation + warning emitted
+- [ ] `--density breathing` with long content → content split across slides
+- [ ] `--density compact` + `--overflow breathing` → override: use breathing overflow strategy despite compact density spacing
+- [ ] `--density breathing` + `--overflow compact` → override: use shrink strategy despite breathing spacing
+- [ ] No `--density` or `--overflow` → default `comfortable` with truncation
+- [ ] Overflow override with `slidesmith generate` → overflow strategy respected in AI-generated output
+- [ ] Overflow override with `slidesmith build` → overflow strategy respected in markdown-built output
 
 ---
 
@@ -211,7 +221,9 @@ Check for each platform:
 
 ## 8. Golden Test
 
-Must pass before any release:
+Must pass before any release.
+
+**Implementation status:** Golden test lives in `tests/e2e/golden.test.ts`. It tests `basic-deck.md` (3 slides: title, content, table) using `--density comfortable` and verifies exit 0, valid ZIP, correct slide count. Structural validity via CI pipeline (`unzip -l` check).
 
 ```
 Input: tests/fixtures/basic-deck.md
@@ -230,3 +242,5 @@ Also verify structural validity (can be CI'd):
 soffice --headless --convert-to pdf /tmp/test.pptx
 # exit code 0 = structurally valid
 ```
+
+**Note:** `basic-deck.md` still covers the core pipeline (parse → render → PPTX). As of v0.1.0, the golden test covers Markdown-to-PPTX with all basic block types (text, table) at `comfortable` density. It does not cover AI generation, overflow, or custom themes — those have separate test paths.

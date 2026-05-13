@@ -118,11 +118,13 @@ slidesmith build deck.md --dry-run --verbose
 
 Generate slides from a text prompt using AI.
 
+> **Note:** AI generation requires either a valid `OPENAI_API_KEY` (set via environment variable or `slidesmith.yaml`) for OpenAI, or a locally running Ollama server (`ollama serve`). See [Configuration](docs/configuration.md) for setup instructions.
+
 ```bash
-# Using OpenAI (default)
+# Using OpenAI (default) — requires OPENAI_API_KEY
 slidesmith generate "3 slides about TypeScript for beginners"
 
-# Using local Ollama
+# Using local Ollama — requires Ollama running on localhost:11434
 slidesmith generate "5 slides on quantum computing" \
   --provider ollama \
   --model llama3.1

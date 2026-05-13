@@ -1,6 +1,6 @@
 # SlideSmith — Design Document
 
-> **Status**: Pre-implementation · **Last updated**: 2026-05-12 · **Version**: v0.1 (planned)
+> **Status**: Implementation Complete · **Last updated**: 2026-05-14 · **Version**: v0.1.0
 
 ---
 
@@ -38,7 +38,10 @@ SlideSmith is a CLI tool that generates professional, native `.pptx` presentatio
 | Markdown → PPTX | ✅ | `slidesmith build deck.md` |
 | Raw text → AI → PPTX (BYOK) | ✅ | `slidesmith generate "text"` |
 | Raw text → AI → PPTX (Ollama) | ✅ | `slidesmith generate --provider ollama` |
-| Template reverse-engineer (magic wand) | ⚠️ Stretch goal | `slidesmith expand template.pptx` |
+| Project scaffolding | ✅ | `slidesmith init [directory]` |
+| Live preview with hot-reload | ✅ | `slidesmith preview deck.md` |
+| List available themes | ✅ | `slidesmith list-themes` |
+| Template reverse-engineer (magic wand) | ❌ Not implemented | `slidesmith expand template.pptx` |
 | Web UI | ❌ Phase 2 | Next.js app |
 
 ### Markdown → PPTX (`slidesmith build`)
@@ -255,26 +258,26 @@ interface TwoColumnBlock {
 
 ## 4. v0.1 Scope
 
-### In (v0.1.0)
+### In (v0.1.0 — All Shipped)
 
-| Feature | Priority | Notes |
-|---------|----------|-------|
-| Markdown → PPTX pipeline | P0 | Core raison d'être |
-| 8 layouts (cover, hero-top, three-column, symmetric, waterfall, comparison, quote, section-divider) | P0 | Covers real-world presentation patterns |
-| 5 themes (dark-tech, blue-white, warm-earth, minimal-clean, high-contrast) | P0 | Broader appeal from day one |
-| Block types: text, tables, code, images | P0 | Text = paragraphs + headings + lists |
-| AI generation (BYOK OpenAI + Ollama) | P0 | Bring your own key |
-| Speaker notes (`NOTE:` lines in MD) | P1 | Parsed from Markdown, added to slide notes |
-| `--ratio 16:9\|4:3` flag | P1 | Default 16:9 |
-| `slidesmith preview` — HTML hot-reload | P1 | Fix design feedback loop. Preview without opening PowerPoint. |
-| `slidesmith init` command | P1 | Scaffolds project with theme + example deck |
-| Density modes (compact/comfortable/breathing) | P1 | Controls spacing throughout |
-| `slidesmith list-themes` command | P1 | Show available themes |
-| `--config <path>` flag | P1 | Path to config file |
-| Zod validation on ContentModel | P1 | Gate between parser/AI and renderer |
-| `--dry-run` flag | P2 | Preview slides + tokens without calling AI |
-| Overflow handling (text too long for slide) | P2 | Shrink font, truncate with warning, or split slide |
-| Error recovery (LLM returns invalid JSON) | P2 | 2 retries with exponential backoff |
+| Feature | Priority | Status | Notes |
+|---------|----------|:------:|-------|
+| Markdown → PPTX pipeline | P0 | ✅ | Core raison d'être |
+| 8 layouts (cover, hero-top, three-column, symmetric, waterfall, comparison, quote, section-divider) | P0 | ✅ | Covers real-world presentation patterns |
+| 5 themes (dark-tech, blue-white, warm-earth, minimal-clean, high-contrast) | P0 | ✅ | Broader appeal from day one |
+| Block types: text, tables, code, images | P0 | ✅ | Text = paragraphs + headings + lists |
+| AI generation (BYOK OpenAI + Ollama) | P0 | ✅ | Bring your own key |
+| Speaker notes (`NOTE:` lines in MD) | P1 | ✅ | Parsed from Markdown, added to slide notes |
+| `--ratio 16:9\|4:3` flag | P1 | ✅ | Default 16:9 |
+| `slidesmith preview` — HTML hot-reload | P1 | ✅ | Fix design feedback loop |
+| `slidesmith init` command | P1 | ✅ | Scaffolds project with theme + example deck |
+| Density modes (compact/comfortable/breathing) | P1 | ✅ | Controls spacing throughout |
+| `slidesmith list-themes` command | P1 | ✅ | Show available themes |
+| `--config <path>` flag | P1 | ✅ | Path to config file |
+| Zod validation on ContentModel | P1 | ✅ | Gate between parser/AI and renderer |
+| `--dry-run` flag | P2 | ✅ | Preview slides + tokens without calling AI |
+| Overflow handling (text too long for slide) | P2 | ✅ | Shrink font, truncate with warning, or split slide |
+| Error recovery (LLM returns invalid JSON) + 4 retries for Ollama | P2 | ✅ | Exponential backoff, code fence stripping, JSON5 lenient parse |
 
 ### Config Merge Priority
 
@@ -286,11 +289,11 @@ Configuration is resolved in this order (higher overrides lower):
 
 Priority rule: `CLI flags ?? config file values ?? defaults`
 
-### Stretch Goal (v0.1, not guaranteed)
+### Stretch Goal (v0.1, not implemented)
 
-| Feature | Why Stretch | Effort |
-|---------|-------------|--------|
-| Magic wand (reverse-engineer PPTX template) | Biggest competitive differentiator. Demo is HN front page material. Requires JSZip + XML parsing of OOXML. | ~2 weeks |
+| Feature | Why Stretch | Effort | Status |
+|---------|-------------|--------|:------:|
+| Magic wand (reverse-engineer PPTX template) | Biggest competitive differentiator. Demo is HN front page material. Requires JSZip + XML parsing of OOXML. | ~2 weeks | ❌ |
 
 ### Deferred (Phase 2+)
 
@@ -315,7 +318,14 @@ slidesmith/
 ├── package.json
 ├── tsconfig.base.json
 ├── vitest.workspace.ts
+├── .github/
+│   └── workflows/
+│       └── ci.yml                    # CI: lint + test + build. CD: npm publish on v* tags
 ├── packages/
+│   ├── cli/                          # @slidesmith/cli — publishable npm wrapper
+│   │   ├── package.json
+│   │   ├── tsconfig.json
+│   │   └── .npmignore
 │   ├── content-model/
 │   │   ├── package.json
 │   │   └── src/
@@ -340,10 +350,12 @@ slidesmith/
 │   │       │   ├── index.ts
 │   │       │   ├── markdown.ts
 │   │       │   └── speaker-notes.ts
-│   │       └── config/
-│   │           ├── index.ts
-│   │           ├── schema.ts
-│   │           └── defaults.ts
+│   │       ├── config/
+│   │       │   ├── index.ts
+│   │       │   ├── schema.ts
+│   │       │   └── defaults.ts
+│   │       └── overflow/             # Density-aware overflow strategies
+│   │           └── index.ts
 │   ├── renderer/
 │   │   ├── package.json
 │   │   └── src/
@@ -409,9 +421,9 @@ slidesmith/
 └── README.md
 ```
 
-### Sprint 1 Readiness Checklist
+### Pre-Implementation Checklist
 
-The following must be resolved before Sprint 1 starts. All are captured in this document:
+All items resolved before implementation began. All captured in this document:
 
 - [x] Slide segmentation strategy documented (`---` + `##` rules)
 - [x] ContentModel types finalized (subtitle, background, quote, two-column, footer)
@@ -464,41 +476,59 @@ The following must be resolved before Sprint 1 starts. All are captured in this 
 | Font download + embed pipeline (Google Fonts → `~/.slidesmith/fonts/`) | 4h | Inter and JetBrains Mono downloaded and embedded |
 | **Total** | **65h** | |
 
-### Sprint 3 — AI & Commands (Weeks 5–6)
+### Sprint 3 — AI & Commands (Weeks 5–6) ✅ COMPLETE
 
 **Goal:** `slidesmith generate` works with OpenAI + Ollama. `init` scaffolds projects.
 
-| Task | Est. | Verification |
-|------|------|-------------|
-| `AiProvider` interface + factory + discriminated config | 3h | Factory returns correct provider by config shape |
-| OpenAI provider (JSON mode + structured outputs) | 4h | Real API call returns valid ContentModel |
-| Ollama provider + sanitization layer (strip fences, JSON5 parse) | 8h | Retry loop handles invalid JSON, 4 retries with backoff |
-| Zod validation on AI output + retry loop | 3h | Invalid response triggers retry then SlideSmithError |
-| `slidesmith generate` CLI command | 4h | CLI accepts prompt + provider + options |
-| `slidesmith init` CLI command (minimal: `cp -r` from template) | 2h | Scaffolds directory + example deck |
-| `slidesmith list-themes` CLI command | 1h | Lists all themes with descriptions |
-| Overflow handling (shrink/truncate/split) | 4h | Long text demo triggers correct strategy per density mode |
-| `--dry-run` flag with char-based token estimation | 2h | Dry run prints estimated slide count + tokens |
-| **Total** | **31h** | |
+| Task | Est. | Verification | Status |
+|------|------|-------------|:------:|
+| `AiProvider` interface + factory + discriminated config | 3h | Factory returns correct provider by config shape | ✅ |
+| OpenAI provider (JSON mode + structured outputs) | 4h | Real API call returns valid ContentModel | ✅ |
+| Ollama provider + sanitization layer (strip fences, JSON5 parse) | 8h | Retry loop handles invalid JSON, 4 retries with backoff | ✅ |
+| Zod validation on AI output + retry loop | 3h | Invalid response triggers retry then SlideSmithError | ✅ |
+| `slidesmith generate` CLI command | 4h | CLI accepts prompt + provider + options | ✅ |
+| `slidesmith init` CLI command (minimal: `cp -r` from template) | 2h | Scaffolds directory + example deck | ✅ |
+| `slidesmith list-themes` CLI command | 1h | Lists all themes with descriptions | ✅ |
+| Overflow handling (shrink/truncate/split) | 4h | Long text demo triggers correct strategy per density mode | ✅ |
+| `--dry-run` flag with char-based token estimation | 2h | Dry run prints estimated slide count + tokens | ✅ |
+| **Total** | **31h** | **All delivered** | ✅ |
 
-### Sprint 4 — Polish & Release (Weeks 7–8)
+### Sprint 4 — Polish & Release (Weeks 7–8) — Phase A ✅ / Phase B ⏳
 
-**Goal:** Docs readable, E2E tests green, npm publish-ready.
+**Goal (Phase A):** Docs readable, E2E tests pass, examples work.
 
-| Task | Est. | Verification |
-|------|------|-------------|
-| `docs/getting-started.md` | 3h | Follow steps from clean environment |
-| `docs/themes.md` | 2h | Theme tokens documented |
-| `docs/configuration.md` | 2h | Config reference complete |
-| `examples/demo-deck.md` | 2h | `slidesmith build demo-deck.md` works |
-| E2E test suite (build, generate, init) | 6h | Full pipeline tests in CI |
-| README.md with screenshots + badges | 3h | 5-second test passes |
-| CONTRIBUTING.md + CREDITS.md | 2h | Contribution flow documented |
-| CI/CD pipeline (GitHub Actions: publish to npm) | 3h | `pnpm publish` workflow green |
-| Cross-platform PPTX testing (PowerPoint, Google Slides, LibreOffice, Keynote) | 4h | All 4 platforms render correctly |
-| Magic wand (stretch goal — PPTX template reverse-engineering) | 16h | Extract theme from arbitrary .pptx, build theme profile, apply to ContentModel |
-| v0.1.0 release checklist + npm publish | 2h | `pnpm publish --tag latest` |
-| **Total** | **45h** | |
+**Goal (Phase B):** npm publish-ready. **BLOCKED** — `npm login` credentials not available. `@slidesmith/cli` package is ready, CI/CD workflow exists, publish triggers on `v*` tags.
+
+#### Phase A — Documentation & Assets (Complete)
+
+| Task | Est. | Verification | Status |
+|------|------|-------------|:------:|
+| `docs/getting-started.md` | 3h | Follow steps from clean environment | ✅ |
+| `docs/themes.md` | 2h | Theme tokens documented | ✅ |
+| `docs/configuration.md` | 2h | Config reference complete | ✅ |
+| `examples/demo-deck.md` | 2h | `slidesmith build demo-deck.md` works | ✅ |
+| README.md with badges + comparison table | 3h | 5-second test passes | ✅ |
+| CONTRIBUTING.md + CREDITS.md | 2h | Contribution flow documented | ✅ |
+| **Phase A Total** | **14h** | **All delivered** | ✅ |
+
+#### Phase B — npm Publish & CI/CD (Blocked)
+
+| Task | Est. | Verification | Status |
+|------|------|-------------|:------:|
+| `@slidesmith/cli` publishable wrapper | 2h | `npm pack` produces correct tarball | ✅ |
+| Config merge: CLI flags > config file > defaults (finalized) | 2h | `--theme X` + config `theme: Y` → X wins | ✅ |
+| `generate` fix: bundle `@slidesmith/ai` into CLI | 1h | Runtime no longer crashes on `generate` | ✅ |
+| CI/CD publish workflow (GitHub Actions) | 3h | `pnpm publish` workflow green on `v*` tags | ✅ |
+| E2E test suite (build, generate, init) | 6h | Full pipeline tests in CI | ✅ |
+| Cross-platform PPTX testing (PowerPoint, Google Slides, LibreOffice, Keynote) | 4h | All 4 platforms render correctly | ⏳ |
+| v0.1.0 npm publish | 2h | `pnpm publish --tag latest` | ⏳ Blocked |
+| **Phase B Total** | **20h** | **Unblocked: ~42h remaining** | ⏳ |
+
+#### Stretch Goal (Not Implemented)
+
+| Task | Est. | Verification | Status |
+|------|------|-------------|:------:|
+| Magic wand (reverse-engineer PPTX template) | 16h | Extract theme from arbitrary .pptx | ❌ |
 
 ---
 
