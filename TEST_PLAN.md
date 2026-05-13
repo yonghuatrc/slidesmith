@@ -76,6 +76,11 @@
 - [ ] `--dry-run` prints slide summary, no file written
 - [ ] `--verbose` includes debug output to stderr
 - [ ] `--config slidesmith.custom.yaml` loads custom config
+- [ ] `--config <path>` flag reads alternate config file → applies settings
+- [ ] CLI flag overrides config file value (`--theme` CLI + config says `blue-white` → CLI wins)
+- [ ] No config file → all defaults applied without error
+- [ ] Invalid config file → ERR_CONFIG_INVALID with clear message
+- [ ] Partial config file → missing keys fall back to defaults
 - [ ] Empty `.md` file → ERR_PARSER_EMPTY_INPUT
 - [ ] `.md` with only `---` lines → warning, no slides
 - [ ] Concurrent builds to same output → handled gracefully
@@ -183,6 +188,8 @@ Check for each platform:
 | `ERR_IO_FILE_NOT_FOUND` | Input .md file doesn't exist | Error: "File not found: {path}" |
 | `ERR_IO_PERMISSION_DENIED` | Can't write to output dir | Error: "Cannot write to {path}. Check permissions." |
 | `ERR_FONT_DOWNLOAD_FAIL` | Can't download Google Fonts | Warning + fallback to system fonts |
+| `ERR_CONFIG_INVALID` | Malformed `slidesmith.yaml` | Error with line + column of parse failure |
+| `ERR_CONFIG_PARSE` | YAML parse failure | Error with YAML parser message |
 
 ---
 

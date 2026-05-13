@@ -85,7 +85,7 @@ The parser splits a flat Markdown file into discrete slides using two rules:
 
 ```
 ┌─────────────┐
-│    core     │  CLI entry, config, parser → ContentModel
+│    core     │  CLI entry, config (load + merge), parser → ContentModel
 │             │  Depends on: content-model, renderer, ai, themes
 └──────┬──────┘
        │
@@ -115,10 +115,21 @@ The parser splits a flat Markdown file into discrete slides using two rules:
                                      │
                                      ▼
                               ┌──────────────┐
-                              │   Validator   │
-                              │ Zod schema    │
-                              └──────────────┘
+                               │   Validator   │
+                               │ Zod schema    │
+                               └──────────────┘
+
+### Config Merge Pipeline
+
 ```
+CLI flags ──────┐
+                ├──▶ merge() ──▶ Build Command
+         ┌──────┘
+         ▼
+slidesmith.yaml ──▶ loadConfig()
+```
+
+Configuration is resolved before the rendering pipeline executes. The merge system combines CLI flags, config file values, and defaults into a single `BuildOptions` object.
 
 ### Why ContentModel?
 
@@ -259,10 +270,21 @@ interface TwoColumnBlock {
 | `slidesmith init` command | P1 | Scaffolds project with theme + example deck |
 | Density modes (compact/comfortable/breathing) | P1 | Controls spacing throughout |
 | `slidesmith list-themes` command | P1 | Show available themes |
+| `--config <path>` flag | P1 | Path to config file |
 | Zod validation on ContentModel | P1 | Gate between parser/AI and renderer |
 | `--dry-run` flag | P2 | Preview slides + tokens without calling AI |
 | Overflow handling (text too long for slide) | P2 | Shrink font, truncate with warning, or split slide |
 | Error recovery (LLM returns invalid JSON) | P2 | 2 retries with exponential backoff |
+
+### Config Merge Priority
+
+Configuration is resolved in this order (higher overrides lower):
+
+1. **CLI flags** — highest priority. `--theme dark-tech` overrides everything.
+2. **Config file** (`slidesmith.yaml`) — loaded from current directory or `--config <path>`.
+3. **Defaults** — hardcoded in `packages/core/src/config/defaults.ts`.
+
+Priority rule: `CLI flags ?? config file values ?? defaults`
 
 ### Stretch Goal (v0.1, not guaranteed)
 
@@ -681,6 +703,8 @@ Theme: dark-tech | Layouts: [cover, hero-top×2, three-column, waterfall]
 [No AI call made. Pass --no-dry-run to generate.]
 ```
 
+Provider configuration (`apiKey`, `model`) is read from `slidesmith.yaml` at build time via the config merge system.
+
 ---
 
 ## 9. Design System
@@ -737,6 +761,7 @@ All v0.1 themes checked for:
 | Config eval security | Malicious .ts config | Medium | Warn users. Recommend YAML for untrusted envs. |
 | AI API costs | Surprise token burn | Medium | Dry-run shows estimate. Running count. Cap at 20 slides. |
 | Syntax highlighting dependency (shiki) | 5MB+ added to bundle | Medium | Lazy-load shiki — only import when code blocks present. |
+| Config merge priority confusion | User expects CLI to win but config wins | Medium | Use `??` (nullish coalescing) — CLI only overrides when explicitly set. |
 
 ---
 
