@@ -8,6 +8,7 @@ import { resolve, isAbsolute } from 'node:path';
 /**
  * Render an ImageBlock onto a pptxgenjs slide.
  * Supports local paths, URLs, and relative paths resolved against cwd.
+ * @param fontScale Optional scale factor (unused for images, kept for interface compatibility).
  */
 export function renderImageBlock(
   block: ImageBlock,
@@ -16,7 +17,8 @@ export function renderImageBlock(
   theme: Theme,
   density: 'compact' | 'comfortable' | 'breathing',
   slideWidth: number,
-  slideHeight: number
+  slideHeight: number,
+  fontScale: number = 1.0
 ): void {
   const { x, y, w, h } = zoneToInches(zone, slideWidth, slideHeight);
 

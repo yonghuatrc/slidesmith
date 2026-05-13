@@ -6,6 +6,7 @@ import { lightenColor } from '../utils/color';
 
 /**
  * Render a TableBlock onto a pptxgenjs slide.
+ * @param fontScale Optional scale factor for font sizes.
  */
 export function renderTableBlock(
   block: TableBlock,
@@ -14,15 +15,19 @@ export function renderTableBlock(
   theme: Theme,
   density: 'compact' | 'comfortable' | 'breathing',
   slideWidth: number,
-  slideHeight: number
+  slideHeight: number,
+  fontScale: number = 1.0
 ): void {
   const { x, y, w, h } = zoneToInches(zone, slideWidth, slideHeight);
+
+  const headerFontSize = Math.max(8, Math.round(12 * fontScale));
+  const dataFontSize = Math.max(8, Math.round(11 * fontScale));
 
   // Build table rows
   const headerRow = block.headers.map((header) => ({
     text: header,
     options: {
-      fontSize: 12,
+      fontSize: headerFontSize,
       fontFace: theme.fonts.body.family,
       color: '#FFFFFF',
       bold: true,
@@ -36,7 +41,7 @@ export function renderTableBlock(
     row.map((cell, _colIndex) => ({
       text: cell,
       options: {
-        fontSize: 11,
+        fontSize: dataFontSize,
         fontFace: theme.fonts.body.family,
         color: theme.colors.text,
         fill: {

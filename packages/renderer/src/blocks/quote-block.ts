@@ -5,6 +5,7 @@ import { zoneToInches } from '../utils/pptx';
 
 /**
  * Render a QuoteBlock onto a pptxgenjs slide.
+ * @param fontScale Optional scale factor for font sizes.
  */
 export function renderQuoteBlock(
   block: QuoteBlock,
@@ -13,7 +14,8 @@ export function renderQuoteBlock(
   theme: Theme,
   density: 'compact' | 'comfortable' | 'breathing',
   slideWidth: number,
-  slideHeight: number
+  slideHeight: number,
+  fontScale: number = 1.0
 ): void {
   const { x, y, w, h } = zoneToInches(zone, slideWidth, slideHeight);
 
@@ -23,7 +25,7 @@ export function renderQuoteBlock(
     y: y - 0.2,
     w: 0.5,
     h: 0.5,
-    fontSize: 48,
+    fontSize: Math.max(24, Math.round(48 * fontScale)),
     fontFace: theme.fonts.heading.family,
     color: theme.colors.accent,
     bold: true,
@@ -37,7 +39,7 @@ export function renderQuoteBlock(
     y,
     w: w - 0.3,
     h,
-    fontSize: 24,
+    fontSize: Math.max(12, Math.round(24 * fontScale)),
     fontFace: theme.fonts.heading.family,
     color: theme.colors.text,
     italic: true,
@@ -55,7 +57,7 @@ export function renderQuoteBlock(
       y: attrY,
       w: w - 0.3,
       h: 0.3,
-      fontSize: 14,
+      fontSize: Math.max(8, Math.round(14 * fontScale)),
       fontFace: theme.fonts.body.family,
       color: theme.colors.textMuted,
       italic: false,

@@ -5,6 +5,7 @@ import { zoneToInches } from '../utils/pptx';
 
 /**
  * Render a TwoColumnBlock onto a pptxgenjs slide.
+ * @param fontScale Optional scale factor for font sizes.
  */
 export function renderTwoColumnBlock(
   block: TwoColumnBlock,
@@ -13,7 +14,8 @@ export function renderTwoColumnBlock(
   theme: Theme,
   density: 'compact' | 'comfortable' | 'breathing',
   slideWidth: number,
-  slideHeight: number
+  slideHeight: number,
+  fontScale: number = 1.0
 ): void {
   const { x, y, w, h } = zoneToInches(zone, slideWidth, slideHeight);
   const colWidth = (w - 0.2) / 2;
@@ -25,7 +27,7 @@ export function renderTwoColumnBlock(
     y,
     w: colWidth,
     h: 0.4,
-    fontSize: 16,
+    fontSize: Math.max(8, Math.round(16 * fontScale)),
     fontFace: theme.fonts.heading.family,
     color: theme.colors.accent,
     bold: true,
@@ -40,7 +42,7 @@ export function renderTwoColumnBlock(
     y: y + 0.45,
     w: colWidth,
     h: h - 0.45,
-    fontSize: 12,
+    fontSize: Math.max(8, Math.round(12 * fontScale)),
     fontFace: theme.fonts.body.family,
     color: theme.colors.text,
     align: 'left',
@@ -64,7 +66,7 @@ export function renderTwoColumnBlock(
     y,
     w: colWidth,
     h: 0.4,
-    fontSize: 16,
+    fontSize: Math.max(8, Math.round(16 * fontScale)),
     fontFace: theme.fonts.heading.family,
     color: theme.colors.accent,
     bold: true,
@@ -79,7 +81,7 @@ export function renderTwoColumnBlock(
     y: y + 0.45,
     w: colWidth,
     h: h - 0.45,
-    fontSize: 12,
+    fontSize: Math.max(8, Math.round(12 * fontScale)),
     fontFace: theme.fonts.body.family,
     color: theme.colors.text,
     align: 'left',

@@ -31,11 +31,11 @@ export async function renderToPptx(
   if (options.title) pptx.title = options.title;
   if (options.author) pptx.author = options.author;
 
-  await buildSlides(slides, theme, options.density, options.ratio, pptx);
+  const totalSlides = await buildSlides(slides, theme, options.density, options.ratio, pptx);
 
   return {
     pptx,
-    slideCount: slides.length,
+    slideCount: totalSlides,
   };
 }
 

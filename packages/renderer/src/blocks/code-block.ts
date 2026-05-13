@@ -31,6 +31,7 @@ async function getHighlighter(): Promise<any> {
 /**
  * Render a CodeBlock onto a pptxgenjs slide.
  * Uses shiki for syntax highlighting when available.
+ * @param fontScale Optional scale factor for font sizes.
  */
 export async function renderCodeBlock(
   block: CodeBlock,
@@ -39,10 +40,11 @@ export async function renderCodeBlock(
   theme: Theme,
   density: 'compact' | 'comfortable' | 'breathing',
   slideWidth: number,
-  slideHeight: number
+  slideHeight: number,
+  fontScale: number = 1.0
 ): Promise<void> {
   const { x, y, w, h } = zoneToInches(zone, slideWidth, slideHeight);
-  const fontSize = 10;
+  const fontSize = Math.max(6, Math.round(10 * fontScale));
   const lineHeight = fontSize * 1.5;
   const maxLines = Math.floor((h * 72) / lineHeight);
   const codeLines = block.code.split('\n').slice(0, maxLines);
