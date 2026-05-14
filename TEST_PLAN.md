@@ -210,12 +210,7 @@ Check for each platform:
 | `tests/fixtures/basic-deck.md` | 3 slides: title, content, table. All block types. |
 | `tests/fixtures/complex-deck.md` | 10+ slides, all 8 layouts, all block types, speaker notes |
 | `tests/fixtures/empty-deck.md` | Empty file (0 bytes) |
-| `tests/fixtures/dividers-only.md` | Only `---` lines |
-| `tests/fixtures/no-dividers.md` | No `---`, only `##` headings |
-| `tests/fixtures/images-deck.md` | Slides with local image, URL image, base64 image |
 | `tests/fixtures/code-heavy.md` | Multiple code blocks in various languages |
-| `tests/fixtures/overflow-deck.md` | Text that exceeds slide capacity |
-| `tests/fixtures/malformed.md` | Malformed markdown |
 
 ---
 

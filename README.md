@@ -46,7 +46,7 @@ Write in Markdown. Get a polished PPTX. No PowerPoint required.
 - **AI generation** — Generate slides from a text prompt via OpenAI or Ollama (BYOK)
 - **8 layouts** — Cover, hero-top, three-column, symmetric, waterfall, comparison, quote, section-divider
 - **5 themes** — dark-tech, blue-white, warm-earth, minimal-clean, high-contrast
-- **Code syntax highlighting** — TypeScript, Python, Rust, Go, Java, SQL, and 14 more languages via shiki
+- **Code syntax highlighting** — TypeScript, Python, Rust, Go, Java, SQL, and more via shiki
 - **Density modes** — Compact (data-heavy), comfortable (default), breathing (keynotes)
 - **Speaker notes** — Add `NOTE:` lines in Markdown, parsed into PPTX speaker notes
 - **Live preview** — `slidesmith preview` starts an HTTP server with hot-reload

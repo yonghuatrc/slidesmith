@@ -135,8 +135,8 @@ You'll see output like:
 ```
 Building: deck.md
 Theme: dark-tech
-Layouts: [cover, hero-top, three-column, comparison, code, quote]
-Output: my-talk.pptx (12 slides)
+Layouts: [cover, hero-top, three-column, symmetric, comparison, quote]
+Output: my-talk.pptx (6 slides)
 ✅ Presentation built successfully!
 ```
 

@@ -34,6 +34,7 @@ pnpm install
 ```
 slidesmith/
 ├── packages/
+│   ├── cli/              # Publishable npm wrapper (@slidesmith/cli)
 │   ├── content-model/    # Shared types + Zod validation (zero dependencies)
 │   ├── core/             # CLI, config, parser, preview server
 │   ├── renderer/         # PPTX rendering engine (pptxgenjs)

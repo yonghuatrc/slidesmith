@@ -343,9 +343,7 @@ slidesmith/
 │   │       │   ├── list-themes.command.ts
 │   │       │   └── preview.command.ts
 │   │       ├── preview/
-│   │       │   ├── index.ts
-│   │       │   ├── html-export.ts
-│   │       │   └── hot-reload.ts
+│   │       │   └── index.ts
 │   │       ├── parser/
 │   │       │   ├── index.ts
 │   │       │   ├── markdown.ts
@@ -354,8 +352,9 @@ slidesmith/
 │   │       │   ├── index.ts
 │   │       │   ├── schema.ts
 │   │       │   └── defaults.ts
-│   │       └── overflow/             # Density-aware overflow strategies
-│   │           └── index.ts
+│   │       └── __tests__/
+│   │           ├── config.test.ts
+│   │           └── parser.test.ts
 │   ├── renderer/
 │   │   ├── package.json
 │   │   └── src/
@@ -374,10 +373,14 @@ slidesmith/
 │   │       │   ├── quote.ts
 │   │       │   └── section-divider.ts
 │   │       ├── blocks/
+│   │       │   ├── index.ts
+│   │       │   ├── types.ts
 │   │       │   ├── text-block.ts
 │   │       │   ├── table-block.ts
 │   │       │   ├── code-block.ts
-│   │       │   └── image-block.ts
+│   │       │   ├── image-block.ts
+│   │       │   ├── quote-block.ts
+│   │       │   └── two-column-block.ts
 │   │       └── utils/
 │   │           ├── text-measure.ts
 │   │           └── color.ts
@@ -386,8 +389,9 @@ slidesmith/
 │   │   └── src/
 │   │       ├── providers/
 │   │       │   ├── types.ts
+│   │       │   ├── factory.ts
+│   │       │   ├── index.ts
 │   │       │   ├── openai.ts
-│   │       │   ├── claude.ts
 │   │       │   └── ollama.ts
 │   │       ├── schema/
 │   │       │   └── content-model-schema.ts
@@ -402,11 +406,10 @@ slidesmith/
 │       └── high-contrast/theme.json
 ├── tests/
 │   ├── e2e/
-│   │   ├── build.test.ts
-│   │   ├── generate.test.ts
-│   │   └── init.test.ts
+│   │   └── golden.test.ts
 │   └── fixtures/
 │       ├── basic-deck.md
+│       ├── code-heavy.md
 │       ├── complex-deck.md
 │       └── empty-deck.md
 ├── docs/
@@ -467,7 +470,7 @@ All items resolved before implementation began. All captured in this document:
 | 8 layout implementations (cover, hero-top, 3-col, symmetric, waterfall, comparison, quote, section-divider) | 16h | Each layout renders correct zone positions |
 | Layout block distribution algorithm (zone affinity rules) | 4h | Blocks map to correct zones per layout type |
 | Text + table block renderers | 6h | Text formatting, table grid, alternating rows |
-| Code block renderer with syntax highlighting (shiki + 20 languages) | 6h | Monospace + colored text runs. JS, TS, Python, Rust, Go, Java, C++, Ruby, SQL, YAML, JSON, HTML, CSS, Bash, Diff |
+| Code block renderer with syntax highlighting (shiki + 15 languages) | 6h | Monospace + colored text runs. JS, TS, Python, Rust, Go, Java, C++, Ruby, SQL, YAML, JSON, HTML, CSS, Bash, Diff |
 | Image block renderer (local/URL/base64 resolution) | 3h | Aspect ratio preserved, remote URLs downloaded |
 | Text measurement utility (node-canvas) | 4h | Measure known string — within 5% of pptxgenjs actual output |
 | Density mode spacing overrides | 2h | Compact < Comfortable < Breathing spacing |
@@ -556,7 +559,7 @@ All items resolved before implementation began. All captured in this document:
   },
 
   "fonts": {
-    "heading": { "family": "Inter", "weights": { "h1": 800, "h2": 700, "h3": 600, "h4": 600 } },
+    "heading": { "family": "Inter", "weight": 600, "weights": { "h1": 800, "h2": 700, "h3": 600, "h4": 600 } },
     "body": { "family": "Inter", "weight": 400, "size": 14 },
     "mono": { "family": "JetBrains Mono", "weight": 400 }
   },
@@ -618,7 +621,7 @@ Themes specify Google Fonts (Inter, JetBrains Mono, etc.). Font availability on 
 |----------|-----|:---------:|:--------:|
 | **Embed fonts** (default) | Download at first build via `slidesmith init`, store in `~/.slidesmith/fonts/`, embed via pptxgenjs `embedFont()` | +300KB per weight | Exact |
 | **Font stack** (fallback) | CSS-like fallback: `"Inter, 'Segoe UI', Arial, sans-serif"` | Zero | Approximate |
-| `--no-embed` flag | Skip embedding, use font stack only | Zero | Variable |
+| `embedFonts: false` (config) | Skip embedding, use font stack only | Zero | Variable |
 
 Google Fonts are Open Font License (OFL) compliant — embedding is permitted. Non-OFL fonts are not supported.
 
@@ -656,7 +659,7 @@ Layout: hero-top
 ```typescript
 interface AiProvider {
   readonly name: string;
-  generateSlides(prompt: string, options: GenerateOptions): Promise<ContentModel>;
+  generateSlides(prompt: string, options?: GenerateOptions): Promise<Slide[]>;
 }
 
 interface GenerateOptions {
@@ -719,8 +722,7 @@ Retry exhausted → Throw SlideSmithError with raw response in detail
 
 ```
 Call provider → Raw string → Sanitize → Parse → Zod valid? → Yes → Return ContentModel
-                                                       → No  → Retry (max 2, backoff: 1s, 2s)
-OpenAI: 2 retries.  Ollama: 4 retries + extra sanitization.
+                                                       → No  → Retry (OpenAI: max 2, backoff 1s/2s; Ollama: max 4, backoff 1s/2s/4s/8s)
 Retry exhausted → Throw SlideSmithError (ERR_AI_PROVIDER_*)
 ```
 
