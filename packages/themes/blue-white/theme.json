@@ -1,4 +1,5 @@
 {
+  "$schema": "https://slidesmith.dev/theme-schema.json",
   "name": "blue-white",
   "version": "1.0.0",
   "description": "Clean corporate theme with blue accent",

@@ -1,4 +1,5 @@
 {
+  "$schema": "https://slidesmith.dev/theme-schema.json",
   "name": "warm-earth",
   "version": "1.0.0",
   "description": "Warm organic theme for storytelling and design reviews",

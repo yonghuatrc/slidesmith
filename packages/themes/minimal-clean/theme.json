@@ -1,4 +1,5 @@
 {
+  "$schema": "https://slidesmith.dev/theme-schema.json",
   "name": "minimal-clean",
   "version": "1.0.0",
   "description": "Minimal black and white theme for print and formal documents",

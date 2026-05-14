@@ -1,4 +1,5 @@
 {
+  "$schema": "https://slidesmith.dev/theme-schema.json",
   "name": "dark-tech",
   "version": "1.0.0",
   "description": "Dark theme for tech presentations with blue accent",

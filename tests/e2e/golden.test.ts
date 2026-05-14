@@ -28,7 +28,6 @@ describe('golden test', () => {
   });
 
   it('contains required PPTX internal files', () => {
-    const { execSync } = await import('node:child_process');
     const listing = execSync(`unzip -l ${OUTPUT}`, { encoding: 'utf-8' });
 
     expect(listing).toContain('[Content_Types].xml');
