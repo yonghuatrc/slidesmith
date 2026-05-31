@@ -176,6 +176,26 @@ slidesmith list-themes
 
 ---
 
+## Known Limitations
+
+### Magic Wand (`slidesmith expand`)
+
+The `expand` command extracts theme data (colors, fonts) from any `.pptx` file. However, it relies on the **theme XML** inside the PPTX — not inline styles.
+
+**✅ Works great with:**
+- PowerPoint-native templates (`.potx`, `.pptx`)
+- Corporate template files
+- Canva exports, Google Slides exports
+- Any PPTX from apps that write to the standard theme XML
+
+**⚠️ Limitations:**
+- **Theme colors**: SlideSmith-generated PPTX files store colors as inline styles, not in the theme XML. `expand` will extract Office defaults from these files, not the actual SlideSmith theme colors. For accurate extraction, use a PowerPoint-native template.
+- **Layout zones**: Same root cause — pptxgenjs uses absolute positioning, not XML placeholders. Zone detection works best with PowerPoint-native templates.
+
+Both limitations are intrinsic to how pptxgenjs writes PPTX files. The `expand` command will produce valid output in all cases — the extracted theme fidelity depends on the source file.
+
+---
+
 ## Configuration
 
 SlideSmith reads `slidesmith.yaml` from the current directory. CLI flags override config file values, which override defaults.

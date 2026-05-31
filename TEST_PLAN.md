@@ -124,6 +124,14 @@
 - [ ] Overflow override with `slidesmith generate` → overflow strategy respected in AI-generated output
 - [ ] Overflow override with `slidesmith build` → overflow strategy respected in markdown-built output
 
+### `slidesmith expand`
+- [ ] `slidesmith expand template.pptx -c content.md -o output.pptx` → extracts theme + renders content
+- [ ] `slidesmith expand template.pptx --dry-run` → shows extracted colors, fonts, confidence
+- [ ] `slidesmith expand nonexistent.pptx` → ERR_FILE_NOT_FOUND
+- [ ] `slidesmith expand corrupt.pptx` → ERR_INVALID_PPTX
+- [ ] Round-trip: external PPTX → extract → rebuild → matches original
+- [ ] PowerPoint-native template → correct theme colors extracted (not Office defaults)
+
 ---
 
 ## 3. PPTX Output Validation
