@@ -3,3 +3,6 @@ export type { RenderOptions, RenderResult, DryRunResult } from './engine/rendere
 export { getLayout, getAllLayouts } from './layouts/registry';
 export { distributeBlocks } from './layouts/distributor';
 export type { LayoutDefinition, Zone, ZoneAssignment, ZoneAffinity } from './layouts/types';
+
+export { extractThemeProfile } from './reverse-eng';
+export type { ThemeProfile, ExtractedLayout, ExtractedZone } from './reverse-eng';

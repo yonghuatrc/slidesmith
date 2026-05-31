@@ -13,10 +13,12 @@
     "@slidesmith/content-model": "workspace:*",
     "@slidesmith/themes": "workspace:*",
     "canvas": "^3.2.3",
+    "jszip": "^3.10.1",
     "pptxgenjs": "^3.12",
     "shiki": "^4.0.2"
   },
   "devDependencies": {
+    "@types/jszip": "^3.4.1",
     "@types/node": "^22"
   }
 }

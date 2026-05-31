@@ -7,6 +7,7 @@ import { executeListThemes } from './list-themes.command';
 import { executePreview } from './preview.command';
 import { executeInit } from './init.command';
 import { executeGenerate } from './generate.command';
+import { executeExpand } from './expand.command';
 
 const program = new Command();
 
@@ -88,6 +89,28 @@ program
   .action(async (prompt: string, opts: Record<string, unknown>) => {
     try {
       await executeGenerate(prompt, opts);
+    } catch (err) {
+      console.error(`❌ ${(err as Error).message}`);
+      process.exit(1);
+    }
+  });
+
+program
+  .command('expand')
+  .description('Extract theme from a PPTX template and apply to content')
+  .argument('<template>', 'Path to .pptx template file')
+  .option('-c, --content <path>', 'Path to markdown content file')
+  .option('-o, --output <path>', 'Output path')
+  .option('--dry-run', 'Show extracted theme without rendering')
+  .option('--verbose', 'Debug output')
+  .action(async (template: string, opts: Record<string, unknown>) => {
+    try {
+      await executeExpand(template, {
+        content: opts.content as string | undefined,
+        output: opts.output as string | undefined,
+        dryRun: opts.dryRun as boolean | undefined ?? false,
+        verbose: opts.verbose as boolean | undefined ?? false,
+      });
     } catch (err) {
       console.error(`❌ ${(err as Error).message}`);
       process.exit(1);
