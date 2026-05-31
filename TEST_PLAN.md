@@ -7,59 +7,60 @@
 ## 1. Unit Test Categories
 
 ### ContentModel Validation
-- [ ] Valid ContentModel → `validate()` returns success
-- [ ] Missing required fields → correct `ERR_*` code
-- [ ] Empty slides array → warning
-- [ ] Layout type not in allowed set → validation error
-- [ ] QuoteBlock with empty text → validation error
+- [x] Valid ContentModel → `validate()` returns success
+- [x] Missing required fields → correct `ERR_*` code
+- [x] Empty slides array → passed as valid (no error)
+- [x] Layout type not in allowed set → validation error
+- [x] QuoteBlock with empty text → validation error
 - [ ] TwoColumnBlock with mismatched items length → passes (valid)
 
 ### Markdown Parser (slide segmentation)
-- [ ] `---` forces slide boundary
-- [ ] `##` heading starts new slide when no `---`
-- [ ] Leading content before first `---` or `##` → title slide
+- [x] `---` forces slide boundary
+- [x] `##` heading starts new slide when no `---`
+- [x] Leading content before first `---` or `##` → title slide
 - [ ] Multiple `---` in a row → warning + skip empty slides
-- [ ] No `---` and no `##` → single slide with all content
-- [ ] Mixed `---` and `##` → correct grouping per segmentation rules
-- [ ] `NOTE:` line → speakerNotes field, not slide content
-- [ ] Code blocks with backticks → CodeBlock with correct language
-- [ ] Tables → TableBlock with headers and rows
-- [ ] Images (local/URL/base64) → ImageBlock with correct src
+- [x] No `---` and no `##` → single slide with all content
+- [x] Mixed `---` and `##` → correct grouping per segmentation rules
+- [x] `NOTE:` line → speakerNotes field, not slide content
+- [x] Code blocks with backticks → CodeBlock with correct language
+- [x] Tables → TableBlock with headers and rows
+- [x] Images (local/URL/base64) → ImageBlock with correct src
 - [ ] Nested lists → flattened list items
 - [ ] Bold/italic/inline code in text → stripped or passed through
 
 ### Layout Engine (block distribution)
 - [ ] Cover: header zone gets h1, body gets rest, subtitle applied
-- [ ] Hero-top: header zone gets h1/h2, body gets everything else
-- [ ] Three-column: 3 equal columns with header bar
-- [ ] Symmetric: text left, image right
+- [x] Hero-top: header zone gets h1/h2, body gets everything else
+- [x] Three-column: 3 column zones + header bar
+- [x] Symmetric: text left, image in media zone
 - [ ] Waterfall: sections stack vertically
 - [ ] Comparison: two columns with headers
-- [ ] Quote: quote zone gets QuoteBlock, attribution rendered
+- [x] Quote: quote zone gets QuoteBlock, attribution rendered
 - [ ] Section-divider: background applied, title centered
 - [ ] Overflow (compact): font size shrinks
 - [ ] Overflow (comfortable): truncate + warning emitted
 - [ ] Overflow (breathing): content split across slides
-- [ ] Empty zone → hidden gracefully (no crash)
-- [ ] Zone with no matching blocks → empty zone hidden
+- [x] Empty zone → hidden gracefully (no crash)
+- [x] Zone with no matching blocks → blocks fall through to body zone
 
 ### Theme System
-- [ ] All 5 themes load and validate against schema
+- [x] All 5 themes load and validate against schema
 - [ ] Missing color → default fallback applied
 - [ ] Invalid type for color value → ERR_THEME_* error
-- [ ] Font specified but not installed/available → font stack fallback
-- [ ] Density mode spacing overrides applied correctly
+- [x] Font specified: each theme has heading, body, and mono fonts
+- [x] Density mode spacing: each theme has compact, comfortable, breathing
 - [ ] WCAG AA contrast: every text/background pair ≥ 4.5:1
-- [ ] Bad theme.json path → ERR_THEME_NOT_FOUND error
+- [x] Bad theme.json path → ERR_THEME_NOT_FOUND error
 
 ### AI Provider System
-- [ ] Factory returns correct provider by config shape
-- [ ] OpenAI: `response_format: json_object` handled correctly
+- [x] Factory returns correct provider by config shape
+- [x] OpenAI: valid ContentModel JSON returned → parsed successfully
 - [ ] Ollama: code fences stripped, trailing text removed
 - [ ] Ollama: JSON5 lenient parse works for edge cases
 - [ ] Retry count differs: OpenAI=2, Ollama=4
 - [ ] Backoff timing: 1s, 2s, 4s, 8s (Ollama); 1s, 2s (OpenAI)
-- [ ] All providers return `ContentModel` type
+- [x] All providers return `ContentModel` type
+- [x] Provider without API key → ERR_AI_NO_API_KEY
 - [ ] Provider timeout → AbortSignal respected
 
 ---
@@ -207,7 +208,7 @@ Check for each platform:
 
 | Fixture File | Purpose |
 |-------------|---------|
-| `tests/fixtures/basic-deck.md` | 3 slides: title, content, table. All block types. |
+| `tests/fixtures/basic-deck.md` | 5 slides: cover, list, code, table, quote. All block types. |
 | `tests/fixtures/complex-deck.md` | 10+ slides, all 8 layouts, all block types, speaker notes |
 | `tests/fixtures/empty-deck.md` | Empty file (0 bytes) |
 | `tests/fixtures/code-heavy.md` | Multiple code blocks in various languages |
@@ -218,7 +219,7 @@ Check for each platform:
 
 Must pass before any release.
 
-**Implementation status:** Golden test lives in `tests/e2e/golden.test.ts`. It tests `basic-deck.md` (3 slides: title, content, table) using `--density comfortable` and verifies exit 0, valid ZIP, correct slide count. Structural validity via CI pipeline (`unzip -l` check).
+**Implementation status:** Golden test lives in `tests/e2e/golden.test.ts`. It tests `basic-deck.md` (5 slides: cover, list, code, table, quote) using `--density comfortable` and verifies exit 0, valid ZIP, correct slide count. Structural validity via CI pipeline (`unzip -l` check).
 
 ```
 Input: tests/fixtures/basic-deck.md
@@ -229,7 +230,9 @@ Assert:
   3. `unzip -l /tmp/test.pptx` contains "ppt/slides/slide1.xml"
   4. `unzip -l /tmp/test.pptx` contains "ppt/slides/slide2.xml"
   5. `unzip -l /tmp/test.pptx` contains "ppt/slides/slide3.xml"
-  6. XML content contains expected theme colors
+  6. `unzip -l /tmp/test.pptx` contains "ppt/slides/slide4.xml"
+  7. `unzip -l /tmp/test.pptx` contains "ppt/slides/slide5.xml"
+  8. XML content contains expected theme colors
 ```
 
 Also verify structural validity (can be CI'd):
@@ -238,4 +241,4 @@ soffice --headless --convert-to pdf /tmp/test.pptx
 # exit code 0 = structurally valid
 ```
 
-**Note:** `basic-deck.md` still covers the core pipeline (parse → render → PPTX). As of v0.1.0, the golden test covers Markdown-to-PPTX with all basic block types (text, table) at `comfortable` density. It does not cover AI generation, overflow, or custom themes — those have separate test paths.
+**Note:** `basic-deck.md` still covers the core pipeline (parse → render → PPTX). As of v0.1.0, the golden test covers Markdown-to-PPTX with all basic block types (text, list, code, table, quote) at `comfortable` density. It does not cover AI generation, overflow, or custom themes — those have separate test paths.

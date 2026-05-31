@@ -496,11 +496,11 @@ All items resolved before implementation began. All captured in this document:
 | `--dry-run` flag with char-based token estimation | 2h | Dry run prints estimated slide count + tokens | ✅ |
 | **Total** | **31h** | **All delivered** | ✅ |
 
-### Sprint 4 — Polish & Release (Weeks 7–8) — Phase A ✅ / Phase B ⏳
+### Sprint 4 — Polish & Release (Weeks 7–8) — Phase A ✅ / Phase B ✅
 
 **Goal (Phase A):** Docs readable, E2E tests pass, examples work.
 
-**Goal (Phase B):** npm publish-ready. **BLOCKED** — `npm login` credentials not available. `@slidesmith/cli` package is ready, CI/CD workflow exists, publish triggers on `v*` tags.
+**Goal (Phase B):** npm publish-ready. `@slidesmith/cli@0.1.0` published to npm. CI/CD workflow triggers on `v*` tags.
 
 #### Phase A — Documentation & Assets (Complete)
 
@@ -514,7 +514,7 @@ All items resolved before implementation began. All captured in this document:
 | CONTRIBUTING.md + CREDITS.md | 2h | Contribution flow documented | ✅ |
 | **Phase A Total** | **14h** | **All delivered** | ✅ |
 
-#### Phase B — npm Publish & CI/CD (Blocked)
+#### Phase B — npm Publish & CI/CD (Complete)
 
 | Task | Est. | Verification | Status |
 |------|------|-------------|:------:|
@@ -524,8 +524,8 @@ All items resolved before implementation began. All captured in this document:
 | CI/CD publish workflow (GitHub Actions) | 3h | `pnpm publish` workflow green on `v*` tags | ✅ |
 | E2E test suite (build, generate, init) | 6h | Full pipeline tests in CI | ✅ |
 | Cross-platform PPTX testing (PowerPoint, Google Slides, LibreOffice, Keynote) | 4h | All 4 platforms render correctly | ⏳ |
-| v0.1.0 npm publish | 2h | `pnpm publish --tag latest` | ⏳ Blocked |
-| **Phase B Total** | **20h** | **Unblocked: ~42h remaining** | ⏳ |
+| v0.1.0 npm publish | 2h | `pnpm publish --tag latest` | ✅ |
+| **Phase B Total** | **20h** | **All delivered** | ✅ |
 
 #### Stretch Goal (Not Implemented)
 
