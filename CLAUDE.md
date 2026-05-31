@@ -105,4 +105,7 @@ pnpm build                   # tsc + esbuild → dist/cli.cjs
 pnpm lint                    # eslint (0 errors required)
 node dist/cli.cjs build <file> --theme dark-tech
 node dist/cli.cjs generate "<prompt>" --provider openai
+
+# After npm publish: `npx slidesmith build <file>` or `npx slidesmith generate "<prompt>"`.
+# Update this section once v0.1.0 is shipped to npm.
 ```
