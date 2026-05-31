@@ -103,9 +103,8 @@ packages/
 pnpm test                    # 67 tests across 7 files
 pnpm build                   # tsc + esbuild → dist/cli.cjs
 pnpm lint                    # eslint (0 errors required)
-node dist/cli.cjs build <file> --theme dark-tech
+npx @slidesmith/cli build <file> --theme dark-tech      # or: slidesmith build <file> (if installed globally)
+npx @slidesmith/cli generate "<prompt>" --provider openai
+node dist/cli.cjs build <file> --theme dark-tech          # Dev build (local clone)
 node dist/cli.cjs generate "<prompt>" --provider openai
-
-# After npm publish: `npx slidesmith build <file>` or `npx slidesmith generate "<prompt>"`.
-# Update this section once v0.1.0 is shipped to npm.
 ```
